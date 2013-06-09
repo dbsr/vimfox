@@ -9,7 +9,7 @@ if exists("g:vimfox_did_vim")
 endif
 
 if !exists("g:Vimfox_host")
-    let g:Vimfox_host = ""
+    let g:Vimfox_host = "127.0.0.1"
 endif
 
 if !exists("g:Vimfox_port")
@@ -27,17 +27,20 @@ import sys
 import vim
 new_path = vim.eval('expand("<sfile>:h")')
 sys.path.append(new_path)
-import vimfox
+from vimfox._vimfox import start_server, check_buffer
 
-vimfox.start_server(vim.eval('g:Vimfox_host . ", " . g:Vimfox_port'))
+start_server(*vim.eval('g:Vimfox_host . ", " . g:Vimfox_port').split(','))
 EOF
 " }}}
 
-" Functions / commands. {{{
+" Functions / Commands. {{{
 function! s:CheckBuffer()
-    python "vimfox.check_buffer()"
+    " make sure we're not checking a plugin buffer (like ctrlP)
+    if &buftype == ""
+        exe "python check_buffer()"
+    endif
 endfunction
-command!        -nargs=0 VimfoxCheckBuffer        call s:CheckBuffer()
+command! -nargs=0 VimfoxCheckBuffer call s:CheckBuffer()
 " }}}
 
 " Autocommands. {{{

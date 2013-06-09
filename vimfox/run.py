@@ -16,12 +16,15 @@ def _run_server(host_address):
     try:
         SocketIOServer(host_address, app, resource='socket.io').serve_forever()
     except:
+        # Server is already up.
         pass
 
 if __name__ == '__main__':
     try:
-        host_address = tuple([x.strip() for x in sys.argv[1:3]])
+        (host, port) = [x.strip() for x in sys.argv[1:3]]
     except (ValueError, IndexError):
         host_address = ("", 9000)
+    else:
+        host_address = (host, int(port))
 
     _run_server(host_address)
