@@ -6,11 +6,12 @@ import vim
 import subprocess
 import urllib2
 
+import server
 
 cur_path = vim.eval('expand("<sfile>:h")')
 
 
-def start_server(host='', port=9000):
+def start_server(host, port):
     subprocess.Popen(['python', os.path.join(cur_path, 'run.py'), host, str(port)])
 
 
@@ -45,6 +46,6 @@ def check_buffer():
             if mtime and mtime == get_mtime(css_file):
                 return
         # request the reload
-        request_reload(css_file)
+        server.request_reload(css_file)
         # update num_changes
         vim.command('let s:num_changes = ' + cur_num_changes)

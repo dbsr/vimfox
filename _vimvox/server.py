@@ -13,15 +13,10 @@ app.debug = True
 _here = os.path.dirname(os.path.abspath(__file__))
 
 
-@app.route('/<path:filename>')
-def send_user_assets(filename):
-    return Response('not found', 404)
-
-
 @app.route('/vimfox/<path:filename>')
-def send_vimfox_assets(filename):
+def send_vimfox_file(filename):
     try:
-        return send_file(os.path.join(_here, filename))
+        return send_file(os.path.join(_here, 'assets', filename))
     except:
         return Response(':(', status=404)
 
