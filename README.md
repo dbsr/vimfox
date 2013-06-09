@@ -11,16 +11,18 @@ scratch.
 Very quick howto
 ================
 
-add this plugin to vim using Pathogen / Vundle.
+1. add this plugin to vim using Pathogen / Vundle.
+2. cd to the basedir of the vimfox repo and:
 
-cd to the basedir of the vimfox repo and:
      sudo pip install -r requirements.txt
 
-optionally change the default host / port for the vimfox server:
+3. optionally change the default host / port for the vimfox server:
+
      let g:Vimfox_host = 127.0.0.1
      let g:Vimfox_port = 9000
 
-add this line to the html page you want to work on:
+4. add this line to the html page you want to work on:
+
      <script type='text/javascript' src="http://localhost:9000/vimfox/vimfox.js"></script>
 
-reload the page and you're done.
+5. reload the page and you're done.
