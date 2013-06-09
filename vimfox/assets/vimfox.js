@@ -27,13 +27,13 @@ window.onload = function() {
 initWebSocket = function(host) {
   var socket;
   socket = io.connect(host + "/ws");
-  return socket.on('reload', function(target_file) {
+  socket.on('reload_file', function(data) {
     var css, new_href, _i, _len, _ref, _results;
     _ref = document.getElementsByTagName('link');
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       css = _ref[_i];
-      if (css.href.match(target_file)) {
+      if (css.href.match(data.target_file)) {
         new_href = css.href.replace(/\?[0-9]+$/, '') + ("?" + (+(new Date)));
         _results.push(css.href = new_href);
       } else {
@@ -41,5 +41,8 @@ initWebSocket = function(host) {
       }
     }
     return _results;
+  });
+  return socket.on('reload_page', function(data) {
+    return location.reload(data.no_force_get ? false : true);
   });
 };

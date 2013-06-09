@@ -39,9 +39,9 @@ class VimFoxNamespace(BaseNamespace):
             del self.sockets[id(self)]
 
     @classmethod
-    def request_reload(self, target_file):
+    def socketio_send(self, event, data):
         for ws in self.sockets.values():
-            ws.emit('reload', target_file)
+            ws.emit(event, data)
 
 
 @app.route('/socket.io/<path:remaining>')
@@ -54,8 +54,9 @@ def socketio(remaining):
     return Response()
 
 
-@app.route('/do_reload', methods=['GET'])
+@app.route('/socket', methods=['POST'])
 def reload():
-    target_file = request.args.get('target_file')
-    VimFoxNamespace.request_reload(target_file)
+    event = request.json['event']
+    data = request.json['data']
+    VimFoxNamespace.socketio_send(event, data)
     return Response('OK', 200)

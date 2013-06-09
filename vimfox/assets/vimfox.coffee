@@ -18,10 +18,15 @@ window.onload = ->
 initWebSocket = (host) ->
   socket = io.connect(host + "/ws")
 
-  # listen for reload command
-  socket.on('reload', (target_file) ->
+  # reload file listener
+  socket.on('reload_file', (data) ->
     for css in document.getElementsByTagName('link')
-      if css.href.match(target_file)
+      if css.href.match(data.target_file)
         new_href = css.href.replace(/\?[0-9]+$/, '') + "?#{+new Date}"
         css.href = new_href
+  )
+
+  # reload page listener
+  socket.on('reload_page', (data) ->
+    location.reload(if data.no_force_get then false else true)
   )

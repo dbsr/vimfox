@@ -5,6 +5,8 @@ import os
 import vim
 import subprocess
 import urllib2
+import json
+
 
 cur_path = vim.eval('expand("<sfile>:h")') + '/vimfox'
 
@@ -20,9 +22,11 @@ def start_server(h, p):
     subprocess.Popen(['python', os.path.join(cur_path, 'run.py'), host, str(port)])
 
 
-def request_reload(target_file):
+def websocket_send(data):
     '''request server to initiate reload request through websocket'''
-    urllib2.urlopen('http://{}:{}/do_reload?target_file={}'.format(host, port, target_file))
+    req = urllib2.Request("http://{0}:{1}/socket".format(host, port), json.dumps(data),
+                          {'Content-Type': 'application/json'})
+    urllib2.urlopen(req)
 
 
 def check_buffer():
@@ -36,8 +40,14 @@ def check_buffer():
     if num_changes != cur_num_changes:
         # write buffer
         vim.command('w')
-        css_file = vim.current.buffer.name.replace('.less', '.css')
-        # request the reload
-        request_reload(os.path.basename(css_file))
+        # chose namespace socketio based on mimetype
+        buffer_file = os.path.basename(vim.current.buffer.name)
+        ext = buffer_file.split('.')[-1]
+        if ext in ['css', 'less']:
+            css_file = buffer_file.replace('.less', '.css')
+            # request the reload
+            websocket_send({'event': 'reload_file', 'data': {'target_file': css_file}})
+        elif ext == 'html':
+            websocket_send({'event': 'reload_page', 'data': {'page': buffer_file}})
         # update num_changes
         vim.command('let s:num_changes = ' + cur_num_changes)
