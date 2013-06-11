@@ -1,3 +1,9 @@
-[submodule "ff/flask"]
-	path = ff/flask
+[submodule "lib/flask"]
+	path = lib/flask
 	url = git://github.com/mitsuhiko/flask.git
+[submodule "lib/gevent"]
+	path = lib/gevent
+	url = git://github.com/surfly/gevent.git
+[submodule "lib/gevent-socketio"]
+	path = lib/gevent-socketio
+	url = git://github.com/abourget/gevent-socketio.git
