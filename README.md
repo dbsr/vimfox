@@ -71,8 +71,10 @@ how to use
 ----------
 
 Start by adding this line to the document you are going to work on:
-        
-        <script type='text/javascript' src="http://localhost:9000/vimfox/vimfox.js"></script>
+
+```javascript        
+<script type='text/javascript' src="http://localhost:9000/vimfox/vimfox.js"></script>
+```
 
 If vimfox.js can't find io (the socketio) library in the documents' namespace
 it will inject the document with the required script tag.
