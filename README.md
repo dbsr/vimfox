@@ -122,8 +122,7 @@ g:Vimfox_reload_write_fts = ['.js', '.coffee', '.html']
 disclaimer
 ----------
 
-This plugin has not been thorougly tested. And even *that* is an overstatement.
-You've been warned.  
+This plugin has not been thorougly tested (as in has not been tested yet).
 
   
 
