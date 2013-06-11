@@ -31,9 +31,9 @@ how does it work?
 First off. The idea for this concept is not mine. I couple of days back I found,
 browser-connect, a vim-plugin which offered live reloading of css files.
 
-    Author: [Bogdanp](http://github.com/Bogdanp)a
+Author: [Bogdanp](http://github.com/Bogdanp)a
 
-    [browser-connect](https://github.com/Bogdanp/browser-connect.vim)
+[browser-connect](https://github.com/Bogdanp/browser-connect.vim)
 
 
 installation
