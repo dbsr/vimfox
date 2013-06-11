@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # dydrmntion@gmail.com ~ 2013
-
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+_here = os.path.dirname(os.path.abspath(__file__))
+sys.path.extend([
+    _here,
+    os.path.join(_here, '../lib')
+])
 
 from socketio.server import SocketIOServer
 from gevent import monkey
@@ -20,11 +23,10 @@ def _run_server(host_address):
         pass
 
 if __name__ == '__main__':
-    try:
-        (host, port) = [x.strip() for x in sys.argv[1:3]]
-    except (ValueError, IndexError):
-        host_address = ("", 9000)
-    else:
-        host_address = (host, int(port))
-
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--host")
+    parser.add_argument("--port", type=int)
+    args = vars(parser.parse_args())
+    host_address = (args['host'], args['port'])
     _run_server(host_address)
