@@ -10,21 +10,28 @@ what is vimfox?
     I am not very good at css and I am lazy. Please hire me.
 
 When im building a website I tend to switch between vim and the browser 
-quite a lot. I'll refresh the page I am working on more than I blink my eyes.
-Most of time I have only a vague idea what the result will be from adding 
-a wrapper for the wrapper inside a container. This is a very frustrating process. 
+a lot, refreshing the page to see the changes more times than I'll blink my eyes.
+This is because most of time I have only a vague idea what the result will be from 
+for example adding a wrapper for the wrapper inside a both left and right 
+floating container. This is a very time consuming, very frustrating process. 
 
 Most modern browser either have builtin functionality and/or extensions which
 enable you to edit the css from within the browser and instantly see the results
 of those edits.
 
 Vimfox brings this funtionality to your favorite text editor. Now you can 
-edit your *.less, .css, .coffee, .js, <del>.html</del> files and see the changes 
+edit your **.less, .css, .coffee, .js, <del>.html</del> files** and see the changes 
 in the browser without refreshing the page.
 
-A refreshless reload, if you will.
+*A refreshless reload, if you will.*
 
-I decided to write a new plugin from scratch.
+how does it work?
+-----------------
+
+First off. The idea for this concept is not mine. I couple of days back I found,
+browser-connect, a vim-plugin which offered live reloading of css files.
+    Author: [Bogdanp](http://github.com/Bogdanp)a
+    [browser-connect](https://github.com/Bogdanp/browser-connect.vim)
 
 
 installation
