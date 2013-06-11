@@ -28,12 +28,12 @@ in the browser without refreshing the page.
 how does it work?
 -----------------
 
-First off. The idea for this concept is not mine. I couple of days back I found,
-browser-connect, a vim-plugin which offered live reloading of css files:
+First off. The idea for this concept is not mine. I couple of days back I found
+browser-connect, a vim-plugin which offers live reloading of css files:
 
-[Bogdanp](http://github.com/Bogdanp)
+Author: [Bogdanp](http://github.com/Bogdanp)
 
-[browser-connect](https://github.com/Bogdanp/browser-connect.vim)
+Plugin: [browser-connect](https://github.com/Bogdanp/browser-connect.vim)
 
 
 installation
