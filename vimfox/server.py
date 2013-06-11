@@ -6,10 +6,14 @@ from socketio.namespace import BaseNamespace
 
 from flask import Flask, send_file, Response, request
 import os
+import time
 
 
 app = Flask(__name__)
 app.debug = True
+app.vimfox = {
+    'ready': 0
+}
 _here = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -28,6 +32,7 @@ class VimFoxNamespace(BaseNamespace):
         self.logger = app.logger
         self.log('socket initialized')
         self.sockets[id(self)] = self
+
         return True
 
     def log(self, msg):
@@ -37,9 +42,18 @@ class VimFoxNamespace(BaseNamespace):
         self.log("connection lost")
         if id(self) in self.sockets:
             del self.sockets[id(self)]
+        app.vimfox['ready'] = True
+
+    def on_busy(self):
+        self.log("processing event request.")
+        app.vimfox['ready'] = time.time()
+
+    def on_ready(self):
+        self.log("ready for new event requests.")
+        app.vimfox['ready'] = True
 
     @classmethod
-    def socketio_send(self, event, data):
+    def socketio_send(self, event, data={}):
         for ws in self.sockets.values():
             ws.emit(event, data)
 
@@ -56,7 +70,28 @@ def socketio(remaining):
 
 @app.route('/socket', methods=['POST'])
 def reload():
-    event = request.json['event']
-    data = request.json['data']
-    VimFoxNamespace.socketio_send(event, data)
-    return Response('OK', 200)
+    if app.vimfox['ready'] or time.time() - app.vimfox['ready'] > 5:
+        event = request.json['event']
+        data = request.json.get('data')
+        VimFoxNamespace.socketio_send(event, data)
+
+        return Response('OK', 200)
+    else:
+
+        return Response('zZz', 503)
+
+
+@app.route('/debug')
+def debug():
+    return Response("""
+            <!DOCTYPE html>
+        <html>
+        <head>
+            <title></title>
+            <meta charset="utf-8" />
+            <link rel="stylesheet" href="/assets/css/style2.css">
+        </head>
+        <body>
+            <script rel="text/javascript" src="/vimfox/vimfox.js"></script>
+        </body>
+        </html>""", status=200)
