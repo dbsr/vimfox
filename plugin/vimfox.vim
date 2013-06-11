@@ -53,6 +53,7 @@ endf
 
 fu! s:VimfoxToggleAutoReload()
   let g:Vimfox_toggle_auto_reload = (g:Vimfox_toggle_auto_reload * -1)
+  echo "vimfox toggle state auto reload = " . g:Vimfox_toggle_auto_reload
 endf
 
 fu! b:LessCSSCompress()

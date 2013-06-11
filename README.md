@@ -1,39 +1,54 @@
 vimfox
 ======
 
-Live (refreshless) website editing in vim
+Live **refreshless** web development for vim.
 
 
 what is vimfox?
 ---------------
 
-    I am not very good at css and I am lazy. Please hire me.
+I don't care for css and I don't think that will ever change. Still, in this day 
+and age you cannot escape having to write a stylesheet every once in a while.  
+One thing that helps me tremendously is editing websites in firefox using firebug. 
+Edits are near instantly applied which makes for a way more enjoyable experience
+than the usual edit-write-reload-(disappointment)-cycle that is css (for me).
 
-When im building a website I tend to switch between vim and the browser 
-a lot, refreshing the page to see the changes more times than I'll blink my eyes.
-This is because most of time I have only a vague idea what the result will be from 
-for example adding a wrapper for the wrapper inside a both left and right 
-floating container. This is a very time consuming, very frustrating process. 
+Vimfox brings live editing to your favorite text editor. With 
+vimfox you can edit **.less, .css, .coffee, .js, ~~.html~~ files** in vim
+and almost instantly see the result back in your browser without the need
+to refresh the page.
 
-Most modern browser either have builtin functionality and/or extensions which
-enable you to edit the css from within the browser and instantly see the results
-of those edits.
+> *A refreshless reload, if you will.*  
 
-Vimfox brings this funtionality to your favorite text editor. Now you can 
-edit your **.less, .css, .coffee, .js, <del>.html</del> files** and see the changes 
-in the browser without refreshing the page.
-
-*A refreshless reload, if you will.*
 
 how does it work?
 -----------------
 
-First off. The idea for this concept is not mine. I couple of days back I found
-browser-connect, a vim-plugin which offers live reloading of css files:
+Staticticity is what being a static file is all about. The browser knows this
+and normally doesnt bother reading them more than once. 
+Vimfox fools the browser into thinking the static files are different 
+which forces it to read and process them as if they were new.
 
-Author: [Bogdanp](http://github.com/Bogdanp)
+Vimfox makes use of the excellent socket.io library to communicate with the 
+page in the browser and for instance tell it to change a linksheets name
+and force a refreshless reload.
 
-Plugin: [browser-connect](https://github.com/Bogdanp/browser-connect.vim)
+This is not my idea. A couple of days ago I was browsing on github and found 
+[browser-connect](https://github.com/Bogdanp/browser-connect.vim), a vim-plugin
+made by [Bogdanp](http://github.com/Bogdanp) which offers live reloading of css
+files. I forked it because I wanted to add *less* support. Then I thought it'd
+be cool to find out if it was possible to implement *real* realtime editing.
+
+That's when I decided to start over from scratch and find out how far I would
+get.
+
+|filetype|refreshless|auto-reload|
+|:-:|:-:|:-:|
+|.js|Y|Y|
+|.coffee|Y|Y|
+|.css|Y|Y|
+|.less|Y|Y|
+|.html|N|Y|
 
 
 installation
@@ -44,51 +59,71 @@ your $HOME/.vim directory.
 
 2. cd to the repo's root and:
         
-        ./sh install.sh
+    `$: ./sh install.sh`
 
-3. This will download all the required modules using pip and install
+   *This will download all the required modules using pip and install
    them locally in the plugins directory. As a result vimfox is not 
    dependent / doesnt have to look very far for its imports when working 
-   in a virtualenv.
+   in a virtualenv.*
 
 
 how to use
 ----------
 
-Start with adding this line to the document you are going to work on:
+Start by adding this line to the document you are going to work on:
         
-    <script type='text/javascript' src="http://localhost:9000/vimfox/vimfox.js"></script>
+        <script type='text/javascript' src="http://localhost:9000/vimfox/vimfox.js"></script>
 
 If vimfox.js can't find io (the socketio) library in the documents' namespace
 it will inject the document with the required script tag.
 When the socketio library is loaded it will set up the sockets which enable the
 vimfox server to communicate with the browser.
 
-For now vimfox can send two events to the browser. The first event 
 
-k
-vimfox.js will inject the document with the socketio.js library if he cant find 
-it in the namespace. Next 
+That's all. Start your (dev) server open a file in vim and start editing. 
 
+> It might be very refreshlessning.
 
 
+options
+-------  
+  
 
+### settings
+```vim
+"address vimfox server
+g:Vimfox_host` = "127.0.0.1"
 
-Very quick howto
-================
+"port vimfox server
+g:Vimfox_port = 9000
 
-1. add this plugin to vim using Pathogen / Vundle.
-2. cd to the basedir of the vimfox repo and:
+"enable auto reload for the following filetypes
+g:Vimfox_reload_auto_fts = ['.css', '.less']
 
-         ./install.sh
+"enable reload post write hook for the following filetypes
+g:Vimfox_reload_write_fts = ['.js', '.coffee', '.html']
 
-3. optionally change the default host / port for the vimfox server:
+```
 
-         let g:Vimfox_host = 127.0.0.1
+### commands
+```vim
+" toggle auto reload hook on and off
+:VimfoxToggleAutoReload
 
-         let g:Vimfox_port = 9000
+" manually check buffer for changes and reload if changes found
+:VimfoxCheckBuffer
 
-4. add this line to the html page you want to work on:
+" manually reload buffer in browser
+:VimfoxReloadBuffer
+```
 
+disclaimer
+----------
 
-5. reload the page and you're done.
+This plugin has not been thorougly tested. And even *that* is an overstatement.
+You've been warned.  
+
+  
+
+> Comments and (to a lesser extend) critique always welcome @ dydrmntion _AT_ gmail
+
