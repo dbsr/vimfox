@@ -16,7 +16,7 @@ Very quick howto
 1. add this plugin to vim using Pathogen / Vundle.
 2. cd to the basedir of the vimfox repo and:
 
-         sudo pip install -r requirements.txt
+         ./install.sh
 
 3. optionally change the default host / port for the vimfox server:
 
