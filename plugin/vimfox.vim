@@ -53,7 +53,6 @@ endf
 
 fu! s:VimfoxToggleAutoReload()
   let g:Vimfox_toggle_auto_reload = (g:Vimfox_toggle_auto_reload * -1)
-  echo "vimfox toggle state auto reload = " . g:Vimfox_toggle_auto_reload
 endf
 
 fu! b:LessCSSCompress()
@@ -67,7 +66,10 @@ endf
 fu! s:StartIfTarget()
     let fts = g:Vimfox_reload_auto_fts + g:Vimfox_reload_write_fts
     if index(fts, eval('&ft')) != -1 || index(fts, expand('%:e')) != -1
-        vimfox#start_server_if_down()
+        if !g:Vimfox_server_up
+          exe "py vimfox.start_server()"
+          let g:Vimfox_server_up = 1
+        endif
     endif
 endf
 
@@ -81,7 +83,8 @@ command! -nargs=0 VimfoxReloadBuffer call s:ReloadBuffer()
 " Autocommands. {{{
 exe "au! CursorHold,InsertLeave *." . join(g:Vimfox_reload_auto_fts, ',*.') . " :call s:CheckBuffer()"
 exe "au! BufWritePost *." . join(g:Vimfox_reload_write_fts, ',*.') . " :call s:ReloadBuffer()"
-au! BufRead,BufNewFile,FileReadPost call s:StartIfTarget()
+au! BufRead,BufNewFile,FileReadPost *.* call s:StartIfTarget()
+au! VimLeave * :exe "py vimfox.kill_server()"
 " }}
 " vim:foldmethod=marker:
 

@@ -9,17 +9,25 @@ import json
 import vim
 
 
-def start_server():
+def start_server(force_restart=False):
     print "Starting server"
     global server_prc
     '''starts the websocketserver in a subprocess and writes
     the server's pid to /tmp/vimfox/vimfox.pid'''
-    server_prc = subprocess.Popen(['python', RUN_SERVER_PY, '--host', SERVER_HOST,
-                                  '--port', str(SERVER_PORT)])
+
+    if force_restart:
+        try:
+            server_prc.kill()
+        except:
+            pass
+
+    if not server_prc or server_prc.poll():
+
+        server_prc = subprocess.Popen(['python', RUN_SERVER_PY, '--host', SERVER_HOST,
+                                       '--port', str(SERVER_PORT)])
 
 
 def kill_server():
-    # check if server process has terminated
     if server_prc and not server_prc.poll():
         server_prc.kill()
 
@@ -85,7 +93,6 @@ def create_reload_event(auto_call=False):
 def auto_check_buffer():
     """Called after CursorHold and InsertLeave and determines whether
     current buffer has changes using vims builtin changenr()."""
-    print "acb"
     # get current number of changes for buffer
     cur_num_changes = vim_setting('changenr()')
     if not int(vim.eval('exists("s:num_changes")')):
@@ -98,6 +105,8 @@ def auto_check_buffer():
 
 
 def vim_setting(*settings):
+    '''Used to set en retrieve vim settings. When the argument is a dict
+    assume its a set setting request, otherwise retrieve provided setting'''
     ret = []
     for s in settings:
         if isinstance(s, dict):

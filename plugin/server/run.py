@@ -2,8 +2,9 @@
 # dydrmntion@gmail.com ~ 2013
 import sys
 import os
+
 _here = os.path.dirname(os.path.abspath(__file__))
-sys.path.extend(os.path.join(_here, '../ext'))
+sys.path.append(os.path.join(_here, 'ext'))
 
 from socketio.server import SocketIOServer
 from gevent import monkey
@@ -14,7 +15,8 @@ from server import app
 
 
 def start_server(host_address):
-    SocketIOServer(host_address, app, resource='socket.io').serve_forever()
+    server = SocketIOServer(host_address, app, resource='socket.io')
+    server.serve_forever()
 
 
 if __name__ == '__main__':
