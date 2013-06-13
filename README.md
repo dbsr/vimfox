@@ -108,7 +108,7 @@ function! ExampleLessFtHook(do_write)
   " change foo.coffee -> foo.css
   let bname = expand('%:t:r')
   let fname = bname . '.css'
-  " the do_write argument is optional, use it to skip unnecesarry ary writes after
+  " the do_write argument is optional, use it to skip unnecesarry writes after
   " reload write hooks.
   if a:do_write
     call system('lessc ....')
