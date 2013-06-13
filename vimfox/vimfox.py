@@ -14,14 +14,17 @@ class VimFox(object):
 
     server_prc = None
 
-    def __init__(self, host, port):
+    def __init__(self, host, port, debug):
         self.host = host
         self.port = port
+        self.debug = debug
 
     def start_server(self):
+        cmd = ['python', RUN_SERVER_PY, '--host', str(self.host), '--port', str(self.port)]
+        if self.debug:
+            cmd.append('--debug')
         if not self.server_prc or self.server_prc.poll():
-            self.server_prc = subprocess.Popen(
-                ['python', RUN_SERVER_PY, '--host', str(self.host), '--port', str(self.port)])
+            self.server_prc = subprocess.Popen(cmd)
 
     def kill_server(self):
         if self.server_prc and not self.server_prc.poll():

@@ -2,6 +2,7 @@
 # dydrmntion@gmail.com ~ 2013
 import sys
 import os
+import logging
 
 _here = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(_here, 'ext'))
@@ -28,7 +29,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--host")
     parser.add_argument("--port", type=int)
+    parser.add_argument("--debug", action="store_true")
     args = vars(parser.parse_args())
     host_address = (args['host'], args['port'])
+
+    if args.get('debug'):
+        print 'DEBUG'
+        app.debug = True
+    else:
+        print 'NORMAL'
+        app.debug = False
+        app.logger.setLevel(logging.ERROR)
 
     start_server(host_address)

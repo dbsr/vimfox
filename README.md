@@ -67,8 +67,12 @@ g:vimfox_reload_insert_leave_filetypes = ['less', 'css']
 " echo toggle state after VimfoxToggle
 g:vimfox_echo_toggle_state = 1
 
-```
-
+" user file type hooks, see the 'filetype hooks' section for more information.
+g:vimfox_user_ft_hooks = {}
+ 
+ >example 
+ let g:vimfox_user_ft_hooks['less'] = function("less_compress_css")
+ <
 
 ###commands
 
@@ -77,14 +81,36 @@ g:vimfox_echo_toggle_state = 1
  
   :VimfoxToggle<cr>
 
-
-" Reload the current buffer. Add 1 as an argument to force a 
-" reload even if the file has not been changed since the previous reload.
-" This command can be used to create your own reload autocmds
+" (force) reload current buffer in browser.
   
   :VimfoxReloadBuffer<cr>
 
+" (force) reload page in browser.
+
+  :VimfoxReloadPage<cr>
+
 ```
+
+###filetype hooks
+
+You can create hooks for specific filetypes. In the plugin are two very simple
+hooks included. For less and coffee files. By default vimfox uses the filename 
+of the current buffer when it sends a reload request to the vimfox server. This
+works for basic css / js and html files but wont work for less and coffee files.
+
+A hook can also take care of compiling to the correct filetype used by 
+the page. The coffee hook for example, uses the coffee compiler to create
+a valid js file, usable by the browser.
+
+The filetype hook can be either a string for *execute* or a *funcref*. When 
+it's a funcref vimfox will try to include a do_save:boolean argument in its 
+first attempt. If it fails vimfox will try to call the function again without
+any arguments.
+
+A filetype hook can optionally return a dictionary. For now, Vimfox will look 
+for only one key, 'fname'. This is the name of the file you want the browser
+to reload. The less_ft_hook for example returns {'fname': 'foo.css'}, as a result,
+vimfox will not look for the buffer's filename: 'foo.less' (and fail).
 
 ###disclaimer
 

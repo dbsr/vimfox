@@ -4,7 +4,8 @@ import vim
 _here = vim.eval('expand("<sfile>:h")')
 sys.path.append(_here)
 from vimfox import VimFox
-vf = VimFox(vim.eval('g:vimfox_host'), vim.eval('g:vimfox_port'))
+vf = VimFox(vim.eval('g:vimfox_host'), vim.eval('g:vimfox_port'),
+            bool(int(vim.eval("exists('g:vimfox_debug')"))))
 vf.start_server()
 EOF
 

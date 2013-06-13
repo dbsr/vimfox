@@ -6,10 +6,9 @@ import time
 
 from socketio import socketio_manage
 from socketio.namespace import BaseNamespace
-from flask import Flask, send_file, Response, request
+from flask import Flask, send_file, Response, request, render_template
 
 app = Flask(__name__)
-app.debug = True
 app.vimfox = {
     'ready': 0
 }
@@ -52,10 +51,12 @@ class VimFoxNamespace(BaseNamespace):
         app.vimfox['ready'] = True
 
     @classmethod
-    def socketio_send(self, event, fname):
-        app.logger.info("event emit request: {0!r}.\n{1}.".format(event, repr(fname)))
+    def socketio_send(self, data):
+        event = data['event']
+        del data['event']
+        app.logger.info("event emit request: {0!r}.".format(repr(data)))
         for ws in self.sockets.values():
-            ws.emit(event, fname)
+            ws.emit(event, data)
 
 
 @app.route('/socket.io/<path:remaining>')
@@ -71,9 +72,7 @@ def socketio(remaining):
 @app.route('/socket', methods=['POST'])
 def reload():
     if app.vimfox['ready'] or time.time() - app.vimfox['ready'] > 5:
-        event = request.json['event']
-        fname = request.json.get('fname')
-        VimFoxNamespace.socketio_send(event, fname)
+        VimFoxNamespace.socketio_send(dict(request.json))
 
         return Response('OK', 200)
     else:
@@ -83,7 +82,8 @@ def reload():
 
 @app.route('/debug')
 def debug():
-    return Response("""
+    return render_template("""
+            {% block lol %}
             <!DOCTYPE html>
         <html>
         <head>
@@ -94,4 +94,4 @@ def debug():
         <body>
             <script rel="text/javascript" src="/vimfox/vimfox.js"></script>
         </body>
-        </html>""", status=200)
+        </html>""")

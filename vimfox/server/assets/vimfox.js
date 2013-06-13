@@ -26,8 +26,9 @@ initSocketIO = function(hostAddress) {
   var socket;
   socket = io.connect("" + hostAddress + "/ws");
   socket.emit('ready');
-  socket.on('reload_file', function(fname) {
-    var e, element, idx, src, tag, v, _i, _len, _ref, _results;
+  socket.on('reload_file', function(data) {
+    var e, element, fname, idx, src, tag, v, _i, _len, _ref, _results;
+    fname = data.fname;
     console.log("received reload_file event.");
     socket.emit('busy');
     if (fname.match(/\.css/)) {
@@ -59,10 +60,10 @@ initSocketIO = function(hostAddress) {
     }
     return _results;
   });
-  return socket.on('reload_page', function(data) {
+  return socket.on('reload_page', function() {
     console.log("received reload page event");
     socket.emit('busy');
-    return location.reload(data.force_get ? true : false);
+    return location.reload();
   });
 };
 

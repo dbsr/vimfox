@@ -20,7 +20,8 @@ initSocketIO = (hostAddress) ->
   socket.emit('ready')
 
   # reload file listener
-  socket.on('reload_file', (fname) ->
+  socket.on('reload_file', (data) ->
+    fname = data.fname
     console.log "received reload_file event."
     socket.emit('busy')
     if fname.match(/\.css/)
@@ -47,10 +48,10 @@ initSocketIO = (hostAddress) ->
   )
 
   # reload page listener
-  socket.on('reload_page', (data) ->
+  socket.on('reload_page', ->
     console.log "received reload page event"
     socket.emit('busy')
-    location.reload(if data.force_get then true else false)
+    location.reload()
   )
 
 injectJS = (src, callback=null) ->
