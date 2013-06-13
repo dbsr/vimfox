@@ -29,10 +29,10 @@ fu! vimfox#reload_buffer(...)
   " a1 = force reload
   " a2 = filename
   let opts = {}
-  if a:0 > 1
+  if a:0 > 0
     let opts['force'] = a:1
   endif
-  if a:0 > 2
+  if a:0 > 1
     let opts['fname'] = a:2
   endif
   call vimfox#_reload_buffer(opts)
@@ -53,7 +53,7 @@ fu! vimfox#reload_page(...)
   " takes one optional argument
   " a:1 = force reload
   let opts = {}
-  if a:0 > 1
+  if a:0 > 0
     let opts['force'] = a:1
   endif
   call vimfox#_reload_page(opts)
