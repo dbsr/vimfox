@@ -108,13 +108,11 @@ function! ExampleLessFtHook(do_write)
   " change foo.coffee -> foo.css
   let bname = expand('%:t:r')
   let fname = bname . '.css'
-
   " the do_write argument is optional, use it to skip unnessary writes after
   " reload write hooks.
   if a:do_write
     call system('lessc ....')
   endif
-
   " if the buffer name is different from the filename used on the page
   " you can return a dictionary with the correct filename
   return {'fname': fname}
