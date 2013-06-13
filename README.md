@@ -37,7 +37,7 @@ your $HOME/.vim directory.
 
 Start by adding this line to the document you are going to work on:
 
-```javascript        
+```html
 <script type='text/javascript' src="http://localhost:9000/vimfox/vimfox.js"></script>
 ```
 
