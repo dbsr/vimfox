@@ -3,6 +3,7 @@
 " Email:    dydrmntion AT gmail
 " Version:  0.5
 " Date:     Thu Jun 13 19:22:40 2013
+
 " function vimfox#buffer_has_changed {{{
 fu! vimfox#buffer_has_changed()
   let l:prev_num_changes = b:num_changes
