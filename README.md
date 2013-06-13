@@ -55,7 +55,7 @@ vimfox will reload the page after you leave insert mode or when you write the bu
 
 ```vim
 " host address vimfox server
-g:vimfox_host` = 127.0.0.1
+g:vimfox_host = '127.0.0.1'
 g:vimfox_port = 9000
 
 " reload after writing buffer to file
