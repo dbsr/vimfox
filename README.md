@@ -1,24 +1,27 @@
+
+```
+"lol
+let g:boo = 2
+```
+
+```vim
+"lal
+let g:asd = 1
+```
 vimfox
 ======
-
 Live **refreshless** web development for vim.
 
 
 what is vimfox?
 ---------------
 
-I don't care for css and I don't think that will ever change. Still, in this day 
-and age you cannot escape having to write a stylesheet every once in a while.  
-One thing that helps me tremendously is editing websites in firefox using firebug. 
-Edits are near instantly applied which makes for a way more enjoyable experience
-than the usual edit-write-reload-(disappointment)-cycle that is css (for me).
 
+Thu Jun 13 05:04:58 CEST 2013
 Vimfox brings live editing to your favorite text editor. With 
 vimfox you can edit **.less, .css, .coffee, .js, ~~.html~~ files** in vim
 and almost instantly see the result back in your browser without the need
 to refresh the page.
-
-> *A refreshless reload, if you will.*  
 
 
 how does it work?
@@ -36,19 +39,10 @@ and force a refreshless reload.
 This is not my idea. A couple of days ago I was browsing on github and found 
 [browser-connect](https://github.com/Bogdanp/browser-connect.vim), a vim-plugin
 made by [Bogdanp](http://github.com/Bogdanp) which offers live reloading of css
-files. I forked it because I wanted to add *less* support. Then I thought it'd
-be cool to find out if it was possible to implement *real* realtime editing.
+files. 
 
-That's when I decided to start over from scratch and find out how far I would
-get.
-
-|filetype|refreshless|auto-reload|
-|:-:|:-:|:-:|
-|.js|Y|Y|
-|.coffee|Y|Y|
-|.css|Y|Y|
-|.less|Y|Y|
-|.html|N|Y|
+I was curious how the plugin worked and after reading up on websockets I 
+decided to write my own plugin.
 
 
 installation
@@ -62,9 +56,7 @@ your $HOME/.vim directory.
     `$: ./sh install.sh`
 
    *This will download all the required modules using pip and install
-   them locally in the plugins directory. As a result vimfox is not 
-   dependent / doesnt have to look very far for its imports when working 
-   in a virtualenv.*
+   them locally in vimfox plugins directory.*
 
 
 how to use
@@ -76,47 +68,53 @@ Start by adding this line to the document you are going to work on:
 <script type='text/javascript' src="http://localhost:9000/vimfox/vimfox.js"></script>
 ```
 
-If vimfox.js can't find io (the socketio) library in the documents' namespace
-it will inject the document with the required script tag.
-When the socketio library is loaded it will set up the sockets which enable the
-vimfox server to communicate with the browser.
+*If vimfox.js can't find io (the socketio) library in the documents' namespace
+it will request the socketio library and add it to the page.*
 
+Open a file that the page is using in vim and enter the following command:
 
-That's all. Start your (dev) server open a file in vim and start editing. 
+>:VimfoxToggle<CR>
 
-> It might be very refreshlessning.
+That's all. Now, depending on what reload setting you chose for this file's filetype
+vimfox will reload the page after every edit or every write.
 
 
 options
 -------  
-  
 
 ### settings
+
 ```vim
 "address vimfox server
-g:Vimfox_host` = "127.0.0.1"
+g:vimfox_host` = "127.0.0.1"
 
 "port vimfox server
-g:Vimfox_port = 9000
+g:vimfox_port = 9000
 
-"enable auto reload for the following filetypes
-g:Vimfox_reload_auto_fts = ['.css', '.less']
+"auto reload after leaving insert mode
+g:vimfox_reload_insert_leave_filetypes = ['.css', '.less']
 
-"enable reload post write hook for the following filetypes
-g:Vimfox_reload_write_fts = ['.js', '.coffee', '.html']
+"auto reload after write
+g:vimfox_reload_post_write_filetypes = ['.js', '.coffee', '.html']
+
+"echo toggle state (after toggling)
+g:vimfox_echo_toggle_state = 1
 
 ```
 
+
 ### commands
-```vim
-" toggle auto reload hook on and off
-:VimfoxToggleAutoReload
 
-" manually check buffer for changes and reload if changes found
-:VimfoxCheckBuffer
+Enable / disable vimfox for the current buffer
+>VimfoxToggle<CR>
 
-" manually reload buffer in browser
-:VimfoxReloadBuffer
+Send a manual reload request for the current buffer to vimfox. Add 1 as 
+an argument to force a reload regardless whether the file has changed since 
+the last reload.
+>VimfoxReloadBuffer<CR>
+
+  *this command can also be used to create your own reload hooks
+
 ```
 
 disclaimer
@@ -127,4 +125,3 @@ This plugin has not been thorougly tested (as in has not been tested yet).
   
 
 > Comments and (to a lesser extend) critique always welcome @ dydrmntion _AT_ gmail
-
