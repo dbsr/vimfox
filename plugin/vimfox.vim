@@ -1,7 +1,8 @@
-" File:     vimfox.vim
-" Author:   daanmathot@gmail.com
-" Date:     Thu Jun 13 01:24:00 CEST 2013
-" Version:  0.1
+" File:     plugin/vimfox.vim
+" Author:   Daan Mathot
+" Email:    dydrmntion AT gmail
+" Version:  0.2
+" Date:     Thu Jun 13 19:22:50 2013
 
 " vimfox global vars {{{
 let g:vimfox_did_onetime_init = 0
@@ -53,3 +54,5 @@ endif
 " commands {{{
 command! -nargs=0 VimfoxToggle call vimfox#toggle_vimfox()
 " }}}
+
+" vim:foldmethod=marker:sw=2:ts=4

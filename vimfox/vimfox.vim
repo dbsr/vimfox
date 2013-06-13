@@ -1,3 +1,9 @@
+" File:     vimfox/vimfox.vim
+" Author:   Daan Mathot
+" Email:    dydrmntion AT gmail
+" Version:  0.1
+" Date:     Thu Jun 13 19:23:33 2013
+
 python << EOF
 import sys
 import vim
