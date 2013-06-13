@@ -29,8 +29,8 @@ your $HOME/.vim directory.
     `$: ./sh install.sh`
 
    *This will download all the required modules using pip and install
-   them locally in the vimfox-plugin directory. This ensures vimfox works
-   in virtualenvs.*
+   them locally in the vimfox-plugin directory. This ensures vimfox will
+   work in virtualenvs.*
 
 
 ###how to use
