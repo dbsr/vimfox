@@ -109,8 +109,8 @@ function! ExampleLessFtHook(do_write)
   let bname = expand('%:t:r')
   let fname = bname . '.css'
 
-  " the do_write argument is optional. it can be used to skip saving
-  " if the reload hook was BufWrite, for example.
+  " the do_write argument is optional, use it to skip unnessary writes after
+  " reload write hooks.
   if a:do_write
     call system('lessc ....')
   endif
