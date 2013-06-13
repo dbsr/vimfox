@@ -75,14 +75,14 @@ g:vimfox_echo_toggle_state = 1
 ```vim
 " enable / disable vimfox for the current buffer
  
-  :VimfoxToggle<CR>
+  :VimfoxToggle<cr>
 
 
 " Reload the current buffer. Add 1 as an argument to force a 
 " reload even if the file has not been changed since the previous reload.
 " This command can be used to create your own reload autocmds
   
-  :VimfoxReloadBuffer<CR>
+  :VimfoxReloadBuffer<cr>
 
 ```
 
