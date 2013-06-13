@@ -65,7 +65,7 @@ g:vimfox_reload_post_write_filetypes = ['.js', '.coffee', '.html']
 g:vimfox_reload_insert_leave_filetypes = ['.less', '.css']
 
 " echo toggle state after VimfoxToggle
-g:vimfox_reload_insert_leave_filetypes = ['.css', '.less']
+g:vimfox_echo_toggle_state = 1
 
 ```
 
