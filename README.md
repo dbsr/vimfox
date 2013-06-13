@@ -1,4 +1,3 @@
-<p style="margin-bottom:-2em; font-size: 80%; text-align: right">Thu Jun 13 05:04:58 CEST 2013</p>
 vimfox
 ======
 
@@ -95,3 +94,6 @@ This plugin has not been thorougly tested (as in has not been tested yet).
 ###contact
 
 Comments and critique always welcome @ dydrmntion _AT_ gmail
+
+~~~
+Thu Jun 13 06:12:42 CEST 2013
