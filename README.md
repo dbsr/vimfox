@@ -15,7 +15,7 @@ This is not my idea. A couple of days ago I was browsing on github and found
 made by [Bogdanp](http://github.com/Bogdanp) which offers live reloading of css
 files. 
 
-I was curious how the plugin worked and after reading up on websockets I 
+I was curious about how the plugin worked and after reading up on websockets I 
 decided to write my own plugin.
 
 
