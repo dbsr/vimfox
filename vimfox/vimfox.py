@@ -20,7 +20,6 @@ class VimFox(object):
 
     def start_server(self):
         if not self.server_prc or self.server_prc.poll():
-
             self.server_prc = subprocess.Popen(
                 ['python', RUN_SERVER_PY, '--host', str(self.host), '--port', str(self.port)])
 

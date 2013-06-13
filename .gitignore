@@ -33,4 +33,4 @@ nosetests.xml
 .project
 .pydevproject
 lib
-vimfox/server/ext
+vimfox/server/ext/*

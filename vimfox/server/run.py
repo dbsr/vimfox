@@ -15,8 +15,12 @@ from server import app
 
 
 def start_server(host_address):
-    server = SocketIOServer(host_address, app, resource='socket.io')
-    server.serve_forever()
+    try:
+        server = SocketIOServer(host_address, app, resource='socket.io')
+        server.serve_forever()
+    except:
+        # assume for now server is already running
+        pass
 
 
 if __name__ == '__main__':
