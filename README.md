@@ -55,9 +55,10 @@ Enables vimfox for the current buffer and ...
 :VimfoxReloadFile <force> <filename>
 ```
 Reloads the buffer's file in the browser without reloading the page.
-  force       skip the buffer is modified check to force a reload.
-  filename    should be used when the filename on the server differs from 
-              the one in vim.
+*force*         skip the buffer is modified check to force a reload.  
+
+*filename*      should be used when the server uses a different filename or 
+                or extension.
 
 ```vim
 :VimfoxReloadBuffer <force>
