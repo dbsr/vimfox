@@ -1,4 +1,6 @@
 #!/bin/sh
+# vimfox requirements install script
+
 pip=$(which pip) &> /dev/null || pip=$(which pip2) &> /dev/null
 [[ -z $pip ]] && echo "ERROR: this install script requires pip: 'https://pypi.python.org/pypi/pip'" && exit 1
 
