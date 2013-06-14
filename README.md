@@ -81,7 +81,7 @@ let g:vimfox_autocommands['coffee'] = [
 " The filename argument makes sure vimfox reloads 'foo.css' instead of 
 " (the on the server not available) 'foo.less'.
 let g:vimfox_autocmmands['less'] = [
-  \ "autocmd InsertLeave <buffer> VimfoxReloadFile expand('%:r') . '.css'
+  \ "autocmd InsertLeave <buffer> VimfoxReloadFile expand('%:r') . '.css'"
   \]
 
 ####options
