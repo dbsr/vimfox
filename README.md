@@ -46,7 +46,8 @@ Start by adding this line to the document you are going to work on:
 ```vim
 :VimfoxToggle
 ```
-Enables vimfox for the current buffer and ...
+Enables vimfox for the current buffer and ...  
+
 ... add's two new commands to the buffer's namespace.
 
 
