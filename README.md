@@ -50,7 +50,6 @@ Start by adding this line to the document you are going to work on:
 " .. creates the following two vimfox commands:
 
 " Reloads the buffer's file in the browser without reloading the page.
-" 
 " <force> can be used to skip the buffer_is_modified check and
 " <filename> should be used when the filename on the server differs from 
 " the one in vim.
