@@ -27,38 +27,42 @@ initSocketIO = function(hostAddress) {
   socket = io.connect("" + hostAddress + "/ws");
   socket.emit('ready');
   socket.on('reload_file', function(data) {
-    var e, element, fname, idx, src, tag, v, _i, _len, _ref, _results;
+    var fname;
     fname = data.fname;
     console.log("received reload_file event.");
     socket.emit('busy');
-    if (fname.match(/\.css/)) {
-      element = 'link';
-      tag = 'href';
-    } else {
-      element = 'script';
-      tag = 'src';
-    }
-    _ref = document.getElementsByTagName(element);
-    _results = [];
-    for (idx = _i = 0, _len = _ref.length; _i < _len; idx = ++_i) {
-      e = _ref[idx];
-      if (e[tag].match(fname)) {
-        if (element === 'script') {
-          src = e.src.replace(/\?[0-9]+$/, '') + ("?" + (+(new Date)));
-          e.parentNode.removeChild(e);
-          _results.push(injectJS(src, function() {
-            return socket.emit('ready');
-          }));
-        } else {
-          v = e[tag].replace(/\?[0-9]+$/, '') + ("?" + (+(new Date)));
-          e[tag] = v;
-          _results.push(socket.emit('ready'));
-        }
+    console.log(data);
+    return setTimeout((function() {
+      var e, element, idx, src, tag, v, _i, _len, _ref, _results;
+      if (fname.match(/\.css/)) {
+        element = 'link';
+        tag = 'href';
       } else {
-        _results.push(void 0);
+        element = 'script';
+        tag = 'src';
       }
-    }
-    return _results;
+      _ref = document.getElementsByTagName(element);
+      _results = [];
+      for (idx = _i = 0, _len = _ref.length; _i < _len; idx = ++_i) {
+        e = _ref[idx];
+        if (e[tag].match(fname)) {
+          if (element === 'script') {
+            src = e.src.replace(/\?[0-9]+$/, '') + ("?" + (+(new Date)));
+            e.parentNode.removeChild(e);
+            _results.push(injectJS(src, function() {
+              return socket.emit('ready');
+            }));
+          } else {
+            v = e[tag].replace(/\?[0-9]+$/, '') + ("?" + (+(new Date)));
+            e[tag] = v;
+            _results.push(socket.emit('ready'));
+          }
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    }), data.delay * 1000);
   });
   return socket.on('reload_page', function() {
     console.log("received reload page event");

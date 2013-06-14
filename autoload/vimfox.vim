@@ -1,8 +1,8 @@
 " File:     autoload/vimfox.vim
 " Author:   Daan Mathot
 " Email:    dydrmntion AT gmail
-" Version:  0.5
-" Date:     Thu Jun 13 19:22:40 2013
+" Version:  0.6
+" Date:     Fri Jun 14 21:28:11 2013
 
 " function vimfox#buffer_has_changed {{{
 fu! vimfox#buffer_has_changed()
@@ -13,9 +13,9 @@ endf
 " }}}
 
 " function vimfox#_reload_file {{{
-fu! vimfox#_reload_file(force, fname)
+fu! vimfox#_reload_file(force, fname, delay)
   if vimfox#buffer_has_changed() || a:force
-    exe "py vf.ws_send(fname='" . a:fname . "', event='reload_file')"
+    exe "py vf.ws_send(fname='" . a:fname . "', event='reload_file', delay=" . string(a:delay) . ")"
   endif
 endf
 " }}}
@@ -24,19 +24,27 @@ endf
 fu! vimfox#reload_file(...)
   let force = 0
   let fname = b:filename
-  if a:0 > 2
+  let delay = 0.0
+  if a:0 > 3
     echohl WarningMsg|"vimfox warning! VimfoxReloadFile takes a maximum of 2 optional arguments."
     echohl None
   else
-    for arg in a:000
-      if type(arg) == 0
-        let force = arg
-      elseif type(arg) == 1
-        let fname = arg
+    for param in a:000
+      echom type(param)
+      if type(param) == 0
+        " int is bool = force
+        let force = param
+      elseif type(param) == 1
+        " str = fname
+        let fname = param
+      elseif type(param) == 5
+        " float = delay
+        let delay = param
       endif
+      unlet param
     endfor
   endif
-  cal vimfox#_reload_file(force, fname)
+  cal vimfox#_reload_file(force, fname, delay)
 endf
 " }}}
 
@@ -88,18 +96,30 @@ fu! vimfox#enable_vimfox()
     let b:num_changes = eval('changenr()')
     command! -nargs=* VimfoxReloadFile cal vimfox#reload_file(<args>)
     command! -nargs=* VimfoxReloadPage cal vimfox#reload_page(<args>)
+    cal vimfox#toggle_autocommands(1)
 endf
 " }}}
-
-fu! vimfox#is_enabled()
-  return exists('b:vimfox_toggle')
-endf
 
 " function vimfox#disable_vimfox {{{
 fu! vimfox#disable_vimfox()
   delcommand VimfoxReloadFile
   delcommand VimfoxReloadPage
+  cal vimfox#toggle_autocommands(0)
 endf
 " }}}
+
+" function vimfox#toggle_autocommands {{{
+fu! vimfox#toggle_autocommands(do_enable)
+  augroup <buffer> VimfoxAuGroup
+    au!
+    if a:do_enable
+      for aucmd in get(g:vimfox_autocommands, b:filetype, [])
+        exe aucmd
+      endfor
+    endif
+  augroup END
+endf
+" }}}
+
 
 " vim:foldmethod=marker:sw=2:ts=4

@@ -30,9 +30,9 @@ class VimFox(object):
         if self.server_prc and not self.server_prc.poll():
             self.server_prc.kill()
 
-    def ws_send(self, event, fname=None):
+    def ws_send(self, event, fname, delay):
         req = urllib2.Request("http://{0}:{1}/socket".format(self.host, self.port),
-                              json.dumps({'event': event, 'fname': fname}),
+                              json.dumps({'event': event, 'fname': fname, 'delay': delay}),
                               {'Content-Type': 'application/json'})
         try:
             urllib2.urlopen(req)

@@ -24,27 +24,30 @@ initSocketIO = (hostAddress) ->
     fname = data.fname
     console.log "received reload_file event."
     socket.emit('busy')
-    if fname.match(/\.css/)
-      element = 'link'
-      tag = 'href'
-    else
-      element = 'script'
-      tag = 'src'
-    for e, idx in document.getElementsByTagName(element)
-      if e[tag].match(fname)
-        if element == 'script'
-          src = e.src.replace(/\?[0-9]+$/, '') + "?#{+new Date}"
-          # First remove the original script
-          e.parentNode.removeChild(e)
-          # And inject it back in
-          injectJS(src, ->
+    console.log data
+    setTimeout (->
+      if fname.match(/\.css/)
+        element = 'link'
+        tag = 'href'
+      else
+        element = 'script'
+        tag = 'src'
+      for e, idx in document.getElementsByTagName(element)
+        if e[tag].match(fname)
+          if element == 'script'
+            src = e.src.replace(/\?[0-9]+$/, '') + "?#{+new Date}"
+            # First remove the original script
+            e.parentNode.removeChild(e)
+            # And inject it back in
+            injectJS(src, ->
+              socket.emit('ready')
+            )
+          else
+            # Add timestamp to href to force browser reload
+            v = e[tag].replace(/\?[0-9]+$/, '') + "?#{+new Date}"
+            e[tag] = v
             socket.emit('ready')
-          )
-        else
-          # Add timestamp to href to force browser reload
-          v = e[tag].replace(/\?[0-9]+$/, '') + "?#{+new Date}"
-          e[tag] = v
-          socket.emit('ready')
+    ),  data.delay * 1000
   )
 
   # reload page listener

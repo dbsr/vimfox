@@ -1,4 +1,4 @@
-vimfox
+vimfox ALPHA
 ======
 
 Live web development plugin for vim.
@@ -45,19 +45,20 @@ Add this script to the (html) page you want to work on
 ```vim
 " Start the vimfox server and make vimfox commands available to the buffer.
 :VimfoxToggle
-```
 
-```vim
-" Reload the file in the browser without reloading the page.
-" <force> boolean (optional) => Force reload the file.
-" <fname> string (optional)  => By default vimfox uses the buffer's filename. Use this
-"                               if the file on the server has a different name.
-:VimfoxReloadFile <force> <fname>
-```
+" Reload the buffer file without reloading the page in the browser.
+:VimfoxReloadFile <force> <fname> <delay>
 
-```vim
 " Reload the page in the browser.
-:VimfoxReloadBuffer <force>
+:VimfoxReloadBuffer <force> <delay>
+
+" optional arguments:
+" <force> boolean => Force reload the file.
+" <fname> string  => By default vimfox uses the buffer's filename. Use this
+"                    if the file on the server has a different name.
+" <delay> float   => The delay in seconds the vimfox.js wil wait before reloading the file.
+"                    You can use this if you need to compile a large less / coffee
+"                    file to css / js.
 ```
 
 ####autocommands
@@ -72,6 +73,9 @@ vimfox is enabled.
 ```vim
 " autocommand examples
 
+" first create the dictionary
+let g:vimfox_autocommands = {}
+
 " call VimfoxReloadPage after every coffee file write.
 let g:vimfox_autocommands['coffee'] = [
   \ "autocmd BufWritePost <buffer> VimfoxReloadPage"
@@ -81,8 +85,8 @@ let g:vimfox_autocommands['coffee'] = [
 " The filename argument makes sure vimfox reloads 'foo.css' instead of 
 " (the on the server not available) 'foo.less'.
 let g:vimfox_autocmmands['less'] = [
-  \ "autocmd InsertLeave <buffer> VimfoxReloadFile expand('%:r') . '.css'"
-  \]
+    \ 'sil! w|call LessCSSCompress()|VimfoxReloadFile expand("%:r") . ".css", 1.5'
+    \]
 ```
 
 ####options
