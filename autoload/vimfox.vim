@@ -26,7 +26,7 @@ fu! vimfox#reload_file(...)
   let fname = b:filename
   let delay = 0.0
   if a:0 > 3
-    echohl WarningMsg|"vimfox warning! VimfoxReloadFile takes a maximum of 2 optional arguments."
+    echohl WarningMsg|"vimfox warning! VimfoxReloadFile takes a maximum of 3 optional arguments."
     echohl None
   else
     for param in a:000
@@ -49,9 +49,9 @@ endf
 " }}}
 
 " function vimfox#_reload_page {{{
-fu! vimfox#_reload_page(force)
+fu! vimfox#_reload_page(force, delay)
   if vimfox#buffer_has_changed() || a:force
-    py vf.ws_send(event='reload_page')
+    exe "py vf.ws_send(event='reload_page', delay=" . string(a:delay) . ")"
   endif
 endf
 " }}}
@@ -59,10 +59,20 @@ endf
 " function vimfox#reload_page {{{
 fu! vimfox#reload_page(...)
   let force = 0
-  if a:0 > 0
-    let force = a:1
+  let delay = 0
+  if a:0 > 2
+    echohl WarningMsg|"vimfox warning! VimfoxReloadPage takes a maximum of 2 optional arguments."
+    echohl None
   endif
-  cal vimfox#_reload_page(force)
+  for param in a:000
+    if type(param) == 0
+      let force = param
+    elseif type(param) == 5
+      let delay = param
+    endif
+    unlet param
+  endfor
+  cal vimfox#_reload_page(force, delay)
 endf
 " }}}
 
@@ -80,7 +90,6 @@ fu! vimfox#toggle_vimfox()
   else
     unlet b:vimfox_toggle
     cal vimfox#disable_vimfox()
-    let b:vimfox_toggle = 1
     let toggle_state = 'disabled'
   endif
   if g:vimfox_echo_toggle_state

@@ -30,7 +30,7 @@ class VimFox(object):
         if self.server_prc and not self.server_prc.poll():
             self.server_prc.kill()
 
-    def ws_send(self, event, fname, delay):
+    def ws_send(self, event, delay, fname=None):
         req = urllib2.Request("http://{0}:{1}/socket".format(self.host, self.port),
                               json.dumps({'event': event, 'fname': fname, 'delay': delay}),
                               {'Content-Type': 'application/json'})
