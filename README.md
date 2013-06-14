@@ -83,6 +83,7 @@ let g:vimfox_autocommands['coffee'] = [
 let g:vimfox_autocmmands['less'] = [
   \ "autocmd InsertLeave <buffer> VimfoxReloadFile expand('%:r') . '.css'"
   \]
+```
 
 ####options
 
