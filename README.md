@@ -44,20 +44,24 @@ Start by adding this line to the document you are going to work on:
 ####commands
 
 ```vim
-" Enables vimfox for the current buffer and ..
 :VimfoxToggle
+```
+Enables vimfox for the current buffer and ...
+... add's two new commands to the buffer's namespace.
 
-" .. creates the following two vimfox commands:
 
-" Reloads the buffer's file in the browser without reloading the page.
-"   <force>       skip the buffer is modified check to force a reload.
-"   <filename>    should be used when the filename on the server differs from 
-"                 the one in vim.
+```vim
 :VimfoxReloadFile <force> <filename>
+```
+Reloads the buffer's file in the browser without reloading the page.
+  <force>       skip the buffer is modified check to force a reload.
+  <filename>    should be used when the filename on the server differs from 
+                the one in vim.
 
-
-" Reloads the page in the browser. 
+```vim
 :VimfoxReloadBuffer <force>
+```
+Reloads the page in the browser.
 
 ```
 
