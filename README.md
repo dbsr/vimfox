@@ -49,14 +49,14 @@ Add this script to the (html) page you want to work on
 
 ```vim
 " Reload the file in the browser without reloading the page.
-" <force> boolean (optional) => force reload the file.
+" <force> boolean (optional) => Force reload the file.
 " <fname> string (optional)  => By default vimfox uses the buffer's filename. Use this
 "                               if the file on the server has a different name.
 :VimfoxReloadFile <force> <fname>
 ```
 
 ```vim
-Reload the page in the browser.
+" Reload the page in the browser.
 :VimfoxReloadBuffer <force>
 ```
 
