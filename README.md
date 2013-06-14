@@ -41,13 +41,25 @@ Start by adding this line to the document you are going to work on:
 <script type='text/javascript' src="http://localhost:9000/vimfox/vimfox.js"></script>
 ```
 
-In vim:
-```vim 
-:VimfoxToggle<CR>
-```
+####commands
 
-That's all. Now, depending on what reload setting you chose for this file's filetype
-vimfox will reload the page after you leave insert mode or when you write the buffer..
+```vim
+" Enables vimfox for the current buffer and ..
+    :VimfoxToggle
+
+" .. creates the following two vimfox commands:
+
+" Reloads the buffer's file in the browser without reloading the page.
+" Both arguments are optional.
+" <force> can be used to skip the buffer_is_modified check and
+" <filename> should be used when the filename on the server differs from 
+" the one in vim.
+    :VimfoxReloadFile <force> <filename>
+
+" Reloads the page in the browser. 
+" <force> skips the buffer_is_modified check.
+    :VimfoxReloadBuffer <force>
+```
 
 
 ###options
