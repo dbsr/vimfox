@@ -52,7 +52,7 @@ Add this script to the (html) page you want to work on
 " <force> boolean (optional) => force reload the file.
 " <fname> string (optional)  => By default vimfox uses the buffer's filename. Use this
 "                               if the file on the server has a different name.
-:VimfoxReloadFile <force> <filename>
+:VimfoxReloadFile <force> <fn>
 ```
 
 ```vim
