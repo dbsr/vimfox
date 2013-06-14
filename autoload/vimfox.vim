@@ -12,62 +12,56 @@ fu! vimfox#buffer_has_changed()
 endf
 " }}}
 
-" function vimfox#_reload_buffer {{{
-fu! vimfox#_reload_buffer(opts)
-  let force = get(a:opts, 'force', 0)
-  let fname = get(a:opts, 'fname', b:filename)
-  let event = "reload_file"
-  if vimfox#buffer_has_changed() || force
-    exe "py vimfox.ws_event(fname='" . fname . "', event='" . event . "')"
+" function vimfox#_reload_file {{{
+fu! vimfox#_reload_file(force, fname)
+  if vimfox#buffer_has_changed() || a:force
+    exe "py vf.ws_send(fname='" . a:fname . "', event='reload_file')"
   endif
 endf
 " }}}
 
-" function vimfox#reload_buffer {{{
-fu! vimfox#reload_buffer(...)
-  " takes two optional positional arguments
-  " a1 = force reload
-  " a2 = filename
-  let opts = {}
-  if a:0 > 0
-    let opts['force'] = a:1
+" function vimfox#reload_file {{{
+fu! vimfox#reload_file(...)
+  let force = 0
+  let fname = b:filename
+  if a:0 > 2
+    echohl WarningMsg|"vimfox warning! VimfoxReloadFile takes a maximum of 2 optional arguments."
+    echohl None
+  else
+    for arg in a:000
+      if type(arg) == 0
+        let force = arg
+      elseif type(arg) == 1
+        let fname = arg
+      endif
+    endfor
   endif
-  if a:0 > 1
-    let opts['fname'] = a:2
-  endif
-  call vimfox#_reload_buffer(opts)
+  cal vimfox#_reload_file(force, fname)
 endf
 " }}}
 
 " function vimfox#_reload_page {{{
-fu! vimfox#_reload_page(opts)
-  let force = get(a:opts, 'force', 0)
-  if vimfox#buffer_has_changed || force
-    exe "py vimfox.ws_event(event='reload_page')"
+fu! vimfox#_reload_page(force)
+  if vimfox#buffer_has_changed() || a:force
+    py vf.ws_send(event='reload_page')
   endif
 endf
 " }}}
 
 " function vimfox#reload_page {{{
 fu! vimfox#reload_page(...)
-  " takes one optional argument
-  " a:1 = force reload
-  let opts = {}
+  let force = 0
   if a:0 > 0
-    let opts['force'] = a:1
+    let force = a:1
   endif
-  call vimfox#_reload_page(opts)
+  cal vimfox#_reload_page(force)
 endf
 " }}}
 
 " function vimfox#toggle_vimfox {{{
 fu! vimfox#toggle_vimfox()
-  " enables / disables vimfox for the current buffer
-  " and starts the server if its not up
   if !exists('b:vimfox_toggle')
     let b:vimfox_toggle = 1
-  endif
-  if b:vimfox_toggle
     if ! g:vimfox_did_onetime_init
       runtime! vimfox/vimfox.vim
       let g:vimfox_did_onetime_init = 1
@@ -76,6 +70,7 @@ fu! vimfox#toggle_vimfox()
     let b:vimfox_toggle = 0
     let toggle_state = 'enabled'
   else
+    unlet b:vimfox_toggle
     cal vimfox#disable_vimfox()
     let b:vimfox_toggle = 1
     let toggle_state = 'disabled'
@@ -91,14 +86,18 @@ fu! vimfox#enable_vimfox()
     let b:filetype = eval('&ft')
     let b:filename = expand('%')
     let b:num_changes = eval('changenr()')
-    command! -nargs=* VimfoxReloadBuffer call vimfox#reload_buffer() <args>
-    command! -nargs=0 VimfoxReloadPage call vimfox#reload_page() <args>
+    command! -nargs=* VimfoxReloadFile cal vimfox#reload_file(<args>)
+    command! -nargs=* VimfoxReloadPage cal vimfox#reload_page(<args>)
 endf
 " }}}
 
+fu! vimfox#is_enabled()
+  return exists('b:vimfox_toggle')
+endf
+
 " function vimfox#disable_vimfox {{{
 fu! vimfox#disable_vimfox()
-  delcommand VimfoxReloadBuffer
+  delcommand VimfoxReloadFile
   delcommand VimfoxReloadPage
 endf
 " }}}

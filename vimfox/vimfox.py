@@ -30,9 +30,10 @@ class VimFox(object):
         if self.server_prc and not self.server_prc.poll():
             self.server_prc.kill()
 
-    def ws_send(self, data):
+    def ws_send(self, event, fname=None):
         req = urllib2.Request("http://{0}:{1}/socket".format(self.host, self.port),
-                              json.dumps(data), {'Content-Type': 'application/json'})
+                              json.dumps({'event': event, 'fname': fname}),
+                              {'Content-Type': 'application/json'})
         try:
             urllib2.urlopen(req)
         except urllib2.HTTPError as e:
