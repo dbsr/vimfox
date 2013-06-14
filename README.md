@@ -35,8 +35,7 @@ your $HOME/.vim directory.
 
 ###how to use
 
-Start by adding this line to the document you are going to work on:
-
+Add this script to the (html) page you want to work on
 ```html
 <script type='text/javascript' src="http://localhost:9000/vimfox/vimfox.js"></script>
 ```
@@ -44,103 +43,63 @@ Start by adding this line to the document you are going to work on:
 ####commands
 
 ```vim
+" Start the vimfox server and make vimfox commands available to the buffer.
+
 :VimfoxToggle
 ```
-Enables vimfox for the current buffer and ...  
-
-... add's two new commands to the buffer's namespace.
-
 
 ```vim
+" Reload the file in the browser without reloading the page.
+" <force> boolean (optional) => force reload the file.
+" <fname> string (optional)  => By default vimfox uses the buffer's filename. Use this
+                                if the file on the server has a different name.
+
 :VimfoxReloadFile <force> <filename>
 ```
-Reloads the buffer's file in the browser without reloading the page.  
-
-*force:boolean*         skip the buffer is modified check to force a reload.  
-
-*filename:str*      should be used when the server uses a different filename or 
-                or extension.
 
 ```vim
+Reload the page in the browser.
+
 :VimfoxReloadBuffer <force>
 ```
-Reloads the page in the browser.
 
-```
+####autocommands
 
-###options
+Vimfox does not include any autocommands. This keeps the vimfox code clean
+and the user in control.
+You can add your own autocommands to the  ```g:vimfox_autocommands``` dictionary
+where the key is the filetype and the value a list of autocommands.
+Vimfox will automaticaly enable those autocommands for buffers where 
+vimfox is enabled.
 
+```vim
+" autocommand examples
+
+" call VimfoxReloadPage after every coffee file write.
+let g:vimfox_autocommands['coffee'] = [
+  \ "autocmd BufWritePost <buffer> VimfoxReloadPage"
+  \]
+
+" call VimfoxReloadFile every time you leave insert mode in a less file.
+" The filename argument makes sure vimfox reloads 'foo.css' instead of 
+" (the on the server not available) 'foo.less'.
+let g:vimfox_autocmmands['less'] = [
+  \ "autocmd InsertLeave <buffer> VimfoxReloadFile expand('%:r') . '.css'
+  \]
+
+####options
 
 ```vim
 " host address vimfox server
 g:vimfox_host = '127.0.0.1'
 g:vimfox_port = 9000
 
-" reload after writing buffer to file
-g:vimfox_reload_post_write_filetypes = ['js', 'coffee', 'html']
-
-" reload after leaving insert mode
-g:vimfox_reload_insert_leave_filetypes = ['less', 'css']
-
 " echo toggle state after VimfoxToggle
 g:vimfox_echo_toggle_state = 1
 
-" user file type hooks, see the 'filetype hooks' section for more information.
-g:vimfox_user_ft_hooks = {}
- 
- >example 
- let g:vimfox_user_ft_hooks['less'] = function("vimfox#less_ft_hook")
- <
+" vimfox autocommands
+g:vimfox_autocommands = {}
 ```
-
-###commands
-
-```vim
-" enable / disable vimfox for the current buffer
- 
-  :VimfoxToggle<cr>
-
-" (force) reload current buffer in browser.
-  
-  :VimfoxReloadBuffer<cr>
-
-" (force) reload page in browser.
-
-  :VimfoxReloadPage<cr>
-
-```
-
-###filetype hooks
-
-
-Vimfox uses the filename of the current buffer for its reload request. This
-works when you are working on 'real' css and js files but fails for example
-on less and coffee files.
-Less files for example first need to be compiled to regular css and its name
-changed from foo.less to foo.css.
-
-```vim
-" ft hook example for less files
-
-function! ExampleLessFtHook(do_write)
-  " change foo.coffee -> foo.css
-  let bname = expand('%:t:r')
-  let fname = bname . '.css'
-  " the do_write argument is optional, use it to skip unnecesarry writes after
-  " reload write hooks.
-  if a:do_write
-    call system('lessc ....')
-  endif
-  " if the buffer name is different from the filename used on the page
-  " you can return a dictionary with the correct filename
-  return {'fname': fname}
-endfunction
-
-let g:vimfox_user_ft_hooks['less'] = function('ExampleLessFtHook')
-```
-
-For very simple hooks you can also use a string, which vimfox will try 
-to run using *execute*.
 
 ###disclaimer
 
@@ -152,6 +111,5 @@ This plugin has not been thorougly tested (as in has not been tested yet).
 Comments and critique always welcome @ dydrmntion _AT_ gmail
 
 
-
 ----
-Thu Jun 13 11:59:45 CEST 2013
+Fri Jun 14 20:58:52 CEST 2013
