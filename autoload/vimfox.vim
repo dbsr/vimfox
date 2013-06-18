@@ -30,7 +30,6 @@ fu! vimfox#reload_file(...)
     echohl None
   else
     for param in a:000
-      echom type(param)
       if type(param) == 0
         " int is bool = force
         let force = param
@@ -80,10 +79,7 @@ endf
 fu! vimfox#toggle_vimfox()
   if !exists('b:vimfox_toggle')
     let b:vimfox_toggle = 1
-    if ! g:vimfox_did_onetime_init
-      runtime! vimfox/vimfox.vim
-      let g:vimfox_did_onetime_init = 1
-    endif
+    runtime! vimfox/vimfox.vim
     cal vimfox#enable_vimfox()
     let b:vimfox_toggle = 0
     let toggle_state = 'enabled'
@@ -119,8 +115,8 @@ endf
 
 " function vimfox#toggle_autocommands {{{
 fu! vimfox#toggle_autocommands(do_enable)
-  augroup <buffer> VimfoxAuGroup
-    au!
+  augroup VimfoxAuGroup
+    au! * <buffer>
     if a:do_enable
       for aucmd in get(g:vimfox_autocommands, b:filetype, [])
         exe aucmd

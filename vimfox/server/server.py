@@ -80,6 +80,11 @@ def reload():
         return Response('zZz', 503)
 
 
+@app.route('/get-server-pid')
+def get_server_pid():
+    return Response(str(os.getpid()), 200)
+
+
 @app.route('/debug')
 def debug():
     return render_template("""
