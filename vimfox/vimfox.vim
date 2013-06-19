@@ -13,7 +13,7 @@ def get_vf():
     sys.path.append(_here)
     from vimfox import VimFox
     vf = VimFox(vim.eval('g:vimfox_host'), vim.eval('g:vimfox_port'),
-                bool(int(vim.eval("exists('g:vimfox_debug')"))))
+                vim.eval("g:vimfox_debug"), vim.eval('g:vimfox_hide_status'))
     vim.command("exe 'au VimLeave * :exe \"py vf.kill_server()\"'")
     return vf
 

@@ -15,17 +15,17 @@ class VimFox(object):
     server_prc = None
     server_prc_pid = None
 
-    def __init__(self, host, port, debug):
+    def __init__(self, host, port, debug, hide_status):
         self.host = host
         self.port = port
         self.debug = debug
+        self.hide_status = hide_status
         self.start_server()
 
     def start_server(self):
         if self.server_is_down():
-            cmd = ['python', RUN_SERVER_PY, '--host', str(self.host), '--port', str(self.port)]
-            if self.debug:
-                cmd.append('--debug')
+            cmd = ['python', RUN_SERVER_PY, '--host', str(self.host), '--port', str(self.port),
+                   '--debug', str(self.debug), '--hide-status', str(self.hide_status)]
             if not self.server_prc or self.server_prc.poll():
                 self.server_prc = subprocess.Popen(cmd)
                 self.server_prc_pid = self.server_prc.pid

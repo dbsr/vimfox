@@ -6,7 +6,7 @@ import time
 
 from socketio import socketio_manage
 from socketio.namespace import BaseNamespace
-from flask import Flask, send_file, Response, request, render_template
+from flask import Flask, send_file, Response, request
 
 app = Flask(__name__)
 app.vimfox = {
@@ -40,6 +40,7 @@ class VimFoxNamespace(BaseNamespace):
         self.log("connection lost")
         if id(self) in self.sockets:
             del self.sockets[id(self)]
+            self.emit('disconnect')
         app.vimfox['ready'] = True
 
     def on_busy(self):
@@ -49,6 +50,10 @@ class VimFoxNamespace(BaseNamespace):
     def on_ready(self):
         self.log("ready for new event requests.")
         app.vimfox['ready'] = True
+
+    def on_settings(self):
+        self.log("processing settings request.")
+        self.emit("settings", {"debug_mode": app.debug, "hide_status": app.vimfox['hide_status']})
 
     @classmethod
     def socketio_send(self, data):
@@ -87,14 +92,14 @@ def get_server_pid():
 
 @app.route('/debug')
 def debug():
-    return render_template("""
-            {% block lol %}
+    return Response("""
             <!DOCTYPE html>
         <html>
         <head>
             <title></title>
             <meta charset="utf-8" />
             <link rel="stylesheet" href="/assets/css/style2.css">
+            <link rel="stylesheet" href="/assets/css/style3.css">
         </head>
         <body>
             <script rel="text/javascript" src="/vimfox/vimfox.js"></script>

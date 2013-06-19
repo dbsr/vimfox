@@ -21,6 +21,14 @@ endif
 if !exists("g:vimfox_echo_toggle_state")
   let g:vimfox_echo_toggle_state = 1
 endif
+
+if !exists("g:vimfox_debug")
+  let g:vimfox_debug = 0
+endif
+
+if !exists("g:vimfox_hide_status")
+  let g:vimfox_hide_status = 0
+endif
 " }}}
 
 " commands {{{
