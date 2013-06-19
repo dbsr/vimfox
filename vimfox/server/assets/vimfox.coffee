@@ -1,68 +1,131 @@
 ### vimfox.js ~ initiates websocket / reload script ###
-window.onload = ->
-  console.log "vimfox.js onload script initiating"
-  # retrieve vimfox host address
-  for script in document.getElementsByTagName('script')
-    if script.src.match('vimfox.js')
-      vimfoxHost = script.src.replace('/vimfox/vimfox.js', '')
-      console.log "vimfox host  => #{vimfoxHost}"
+namespace = (target, name, block) ->
+  [target, name, block] = [(if typeof exports isnt 'undefined' then exports else window), arguments...] if arguments.length < 3
+  top    = target
+  target = target[item] or= {} for item in name.split '.'
+  block target, top
 
-  # add the socket.io library
-  unless io?
-    console.log "injecting socket.io.min.js"
-    injectJS(vimfoxHost + "/vimfox/socket.io.min.js", ->
-      initSocketIO(vimfoxHost)
+window.onload = ->
+  vimfox.initVimfox()
+
+namespace 'vimfox', (exports) ->
+  exports._initLog = []
+  exports.log = (m) ->
+    if not vimfox.settings?
+      vimfox._initLog.push(m)
+    else if vimfox.settings.debug_mode
+      console.log("vimfox_debug >> #{m}")
+
+  exports.initVimfox = ->
+    vimfox.log("Initiating vimfox.js.")
+    vimfox.status = new vimfox.Status()
+
+    for script in document.getElementsByTagName('script')
+      if script.src.match('vimfox.js')
+        exports.HOST = script.src.replace('/vimfox/vimfox.js', '')
+        vimfox.log("Retrieved vimfox server HOST: #{vimfox.HOST}.")
+        break
+
+    if io?
+      vimfox.log("'io' found in namespace. Skipping js injection.")
+      vimfox.createSockets()
+    else
+      vimfox.log("'io' not found in namespace. Injecting 'socket.io.js'.")
+      document.body.appendChild(
+        vimfox.injectJS("#{vimfox.HOST}/vimfox/socket.io.min.js", ->
+          vimfox.createSockets()
+        )
+      )
+
+    vimfox.cssFiles = {}
+    vimfox.log("Searching for reloadable stylesheets.")
+    for link in document.getElementsByTagName('link')
+      vimfox.cssFiles[link.href.match(/[^/]+$/)[0]] =
+        link: link,
+        reload: (delay=0) ->
+          setTimeout (=>
+            @link.href = @link.href.replace(/\?[0-9]+$/, "") + "?#{+new Date}"
+          ), delay * 1000
+
+  exports.createSockets = ->
+    vimfox.log("Connecting to vimfox socket server.")
+    # Create the websocket
+    socket = io.connect("#{vimfox.HOST}/ws")
+    # on error socket
+    socket.on('error', (e) ->
+      vimfox.log("Connection error!")
+      vimfox.status.update_status(2)
+    )
+    # on d/c socket
+    socket.on('disconnect', ->
+      vimfox.log("Connection lost!")
+      vimfox.status.update_status(2)
+    )
+    # settings socket
+    vimfox.log("Requesting vimfox settings.")
+    socket.emit("settings")
+    socket.on("settings", (data) ->
+      vimfox.log("Connected. Parsing settings.")
+      vimfox.status.update_status(0)
+      vimfox.settings =
+        debug_mode: data.debug_mode,
+        hide_status: data.hide_status
+      if vimfox.settings.hide_status then vimfox.status.kill_me()
+      if vimfox.settings.debug_mode == true
+        for m in vimfox._initLog
+          vimfox.log(m)
     )
 
-initSocketIO = (hostAddress) ->
-  socket = io.connect("#{hostAddress}/ws")
-  # broadcast we're ready for new events
-  socket.emit('ready')
-
-  # reload file listener
-  socket.on('reload_file', (data) ->
-    fname = data.fname
-    console.log "received reload_file event."
-    socket.emit('busy')
-    console.log data
-    setTimeout (->
-      if fname.match(/\.css/)
-        element = 'link'
-        tag = 'href'
+    # reload stylesheet socket
+    socket.on('reload_file', (data) ->
+      vimfox.log("'reload_file' socket activated: file: #{data.fname}.")
+      socket.emit("busy")
+      if not vimfox.cssFiles[data.fname]
+        vimfox.status.update_status(1, "could not find #{data.fname} in DOM.")
       else
-        element = 'script'
-        tag = 'src'
-      for e, idx in document.getElementsByTagName(element)
-        if e[tag].match(fname)
-          if element == 'script'
-            src = e.src.replace(/\?[0-9]+$/, '') + "?#{+new Date}"
-            # First remove the original script
-            e.parentNode.removeChild(e)
-            # And inject it back in
-            injectJS(src, ->
-              socket.emit('ready')
-            )
-          else
-            # Add timestamp to href to force browser reload
-            v = e[tag].replace(/\?[0-9]+$/, '') + "?#{+new Date}"
-            e[tag] = v
-            socket.emit('ready')
-    ),  data.delay * 1000
-  )
+        vimfox.cssFiles[data.fname].reload(data.delay)
+      socket.emit("ready")
+    )
 
-  # reload page listener
-  socket.on('reload_page', ->
-    console.log "received reload page event"
-    socket.emit('busy')
-    location.reload()
-  )
+    # reload page socket
+    socket.on('reload_page', (data) ->
+      vimfox.log("'reload_page' socket activated.")
+      setTimeout (->
+        location.reload()
+      ), data.delay * 1000
+    )
 
-injectJS = (src, callback=null) ->
-  s = document.createElement('script')
-  s.type = 'text/javascript'
-  s.async = true
-  s.onload = ->
-    if callback?
-      callback()
-  s.src = src
-  document.body.appendChild(s)
+  exports.injectJS = (src, onload) ->
+    s = document.createElement('script')
+    s.type = 'text/javascript'
+    s.onload = onload
+    s.src = src
+    return s
+
+
+  class exports.Status
+    constructor: ->
+      d = document.createElement('div')
+      d.id = "vimfox_status"
+      document.body.appendChild(d)
+      @me = document.getElementById('vimfox_status')
+      @update_status(1)
+
+    update_status: (status_code=0, tooltip="") ->
+      status_color = [
+        'green', 'orange', 'red'
+      ][status_code]
+      for k, v of {
+          position: 'absolute',
+          height: '10px',
+          width: '10px',
+          margin: '10px',
+          top: '0',
+          right: '0',
+          backgroundColor: status_color}
+        @me.style[k] = v
+
+      @me.title = tooltip
+
+    kill_me: ->
+      document.body.removeChild(@me)
