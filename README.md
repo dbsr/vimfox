@@ -84,13 +84,13 @@ let g:vimfox_autocommands['coffee'] = [
 " call VimfoxReloadFile every time you leave insert mode in a less file.
 " The filename argument makes sure vimfox reloads 'foo.css' instead of 
 " (the on the server not available) 'foo.less'.
-let vimfox_reload_fname = expand('%:t:r') . '.css'
 let g:vimfox_autocmmands['less'] = [
     \"autocmd InsertLeave <buffer> sil! w|call LessCSSCompress()|VimfoxReloadFile expand('%:r') . '.css',  1.5"
     \]
 
 " for scss files. If you are 'watching' for file changes increase the delay to make
 " sure vimfox reloads the new css file.
+let vimfox_reload_fname = expand('%:t:r') . '.css'
 let g:vimfox_autocommands['scss'] = [
     \'au! BufWritePost <buffer> VimfoxReloadFile "' . vimfox_reload_fname . '", 1, 0.25', 
     \'au! InsertLeave <buffer> :sil! w|VimfoxReloadFile "' . vimfox_reload_fname . '", 0.5'
