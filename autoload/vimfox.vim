@@ -117,7 +117,7 @@ endf
 fu! vimfox#toggle_autocommands(do_enable)
   augroup VimfoxAuGroup
     au! * <buffer>
-    if a:do_enable && exists('g:vimfox_autocommands')
+    if a:do_enable
       for aucmd in get(g:vimfox_autocommands, b:filetype, [])
         exe aucmd
       endfor
