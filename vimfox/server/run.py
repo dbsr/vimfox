@@ -33,6 +33,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     host_address = (args.host, args.port)
     app.debug = args.debug
+    if not args.debug:
+        app.logger.propagate = False
+        app.logger.level = 40
     app.vimfox['hide_status'] = not args.hide_status
 
     start_server(host_address)
