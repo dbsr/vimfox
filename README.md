@@ -101,7 +101,14 @@ g:vimfox_echo_toggle_state = 1
 
 " vimfox autocommands
 g:vimfox_autocommands = {}
+
+" vimfox debug mode (stdout + javascript console in browser)
+g:vimfox_debug = 0
+
+" hide vimfox status indicator
+g:vimfox_hide_status = 0
 ```
+
 
 ###disclaimer
 
