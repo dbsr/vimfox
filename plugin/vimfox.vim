@@ -6,7 +6,6 @@
 
 " vimfox global vars {{{
 let g:vimfox_did_onetime_init = 0
-let g:vimfox_debug = 1
 " }}}
 
 " options {{{
@@ -28,6 +27,10 @@ endif
 
 if !exists("g:vimfox_hide_status")
   let g:vimfox_hide_status = 0
+endif
+
+if !exists("g:vimfox_autocommands")
+  let g:vimfox_autocommands = {}
 endif
 " }}}
 

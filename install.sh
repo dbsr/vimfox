@@ -1,10 +1,32 @@
 #!/bin/sh
 # vimfox requirements install script
 
-pip=$(which pip) &> /dev/null || pip=$(which pip2) &> /dev/null
-[[ -z $pip ]] && echo "ERROR: this install script requires pip: 'https://pypi.python.org/pypi/pip'" && exit 1
+# we need virtualenv/pip for this to work.
+virtualenv=$(which virtualenv) &> /dev/null || pip=$(which virtualenv2) &> /dev/null
+if [[ -z $virtualenv ]]
+then
+  echo "ERROR: this install script requires virtualenv: 'https://pypi.python.org/pypi/virtualenv'."
+  exit 1
+fi
 
-ext_dir="./vimfox/server/ext"
-[[ -d $ext_dir ]] || mkdir $ext_dir
+venv_dir=./venv_temp
+ext_dir=./vimfox/server/ext
 
-$pip install -t $ext_dir $(cat .requirements.txt|tail -$(($(cat .requirements.txt|wc -l)-1)))
+if ! [[ -d $venv_dir ]] 
+then
+    mkdir $venv_dir
+fi
+
+if ! [[ -d $ext_dir ]] 
+then
+    mkdir $ext_dir
+fi
+
+$virtualenv $venv_dir && \
+source $venv_dir/bin/activate && \
+pip install -r .requirements.txt -t $ext_dir && \
+if [[ `python -c "import argparse" &> /dev/null; echo $?`  != 0 ]]
+then
+  pip install argparse -t $ext_dir
+fi && \
+rm -rf $venv_dir

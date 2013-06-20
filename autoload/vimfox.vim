@@ -1,8 +1,8 @@
-" File:     autoload/vimfox.vim
-" Author:   Daan Mathot
-" Email:    dydrmntion AT gmail
-" Version:  0.6
-" Date:     Fri Jun 14 21:28:11 2013
+" File:         autoload/vimfox.vim
+" Author:       Daan Mathot
+" Email:        dydrmntion AT gmail
+" Version:      0.7
+" Date:         Thu Jun 20 16:08:52 2013
 
 " function vimfox#buffer_has_changed {{{
 fu! vimfox#buffer_has_changed()

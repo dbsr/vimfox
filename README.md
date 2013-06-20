@@ -87,14 +87,6 @@ let g:vimfox_autocommands['coffee'] = [
 let g:vimfox_autocmmands['less'] = [
     \"autocmd InsertLeave <buffer> sil! w|call LessCSSCompress()|VimfoxReloadFile expand('%:r') . '.css',  1.5"
     \]
-
-" for scss files. If you are 'watching' for file changes increase the delay to make
-" sure vimfox reloads the new css file.
-let vimfox_reload_fname = expand('%:t:r') . '.css'
-let g:vimfox_autocommands['scss'] = [
-    \'au! BufWritePost <buffer> VimfoxReloadFile "' . vimfox_reload_fname . '", 1, 0.25', 
-    \'au! InsertLeave <buffer> :sil! w|VimfoxReloadFile "' . vimfox_reload_fname . '", 0.5'
-    \]
 ```
 
 ####options
@@ -106,12 +98,6 @@ g:vimfox_port = 9000
 
 " echo toggle state after VimfoxToggle
 g:vimfox_echo_toggle_state = 1
-
-" hide the vimfox status indicator
-g:vimfox_hide_status = 0
-
-" debug mode (for the vimfox server + vimfox debug messages to javascript console).
-g:vimfox_debug = 0
 
 " vimfox autocommands
 g:vimfox_autocommands = {}
@@ -128,4 +114,4 @@ Comments and critique always welcome @ dydrmntion _AT_ gmail
 
 
 ----
-Wed Jun 19 19:42:52 CEST 2013
+Fri Jun 14 20:58:52 CEST 2013
