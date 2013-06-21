@@ -50,7 +50,7 @@ Add this script to the (html) page you want to work on
 :VimfoxReloadFile <force> <fname> <delay>
 
 " Reload the page in the browser.
-:VimfoxReloadBuffer <force> <delay>
+:VimfoxReloadPage <force> <delay>
 
 " optional arguments:
 " <force> boolean => Force reload the file.
