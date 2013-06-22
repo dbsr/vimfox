@@ -59,22 +59,22 @@ Add this script to the (html) page you want to work on
 3. Commands                                                  *vimfox-commands*
 
 
-:VimfoxToggle                                                 *'VimfoxToggle'*
+:VimfoxToggle                                                 *VimfoxToggle*
 
 Start the vimfox server and make vimfox commands available to the buffer.
 
 
-:VimfoxReloadFile <force> <fname> <delay>                 *'VimfoxReloadFile'*
+:VimfoxReloadFile <force> <fname> <delay>                 *VimfoxReloadFile*
 
 Reload the buffer file without reloading the page in the browser.
 
 
-:VimfoxReloadPage <force> <delay>                         *'VimfoxReloadPage'*
+:VimfoxReloadPage <force> <delay>                         *VimfoxReloadPage*
 
 Reload the page in the browser.
 
 
-optional command arguments:                       *'vimfox-command-arguments'*
+optional command arguments:                       *vimfox-command-arguments*
 
 <force> boolean => Force reload the file.
 <fname> string  => By default vimfox uses the buffer's filename. Use this
@@ -119,28 +119,28 @@ Examples >
 5. Options                                                    *vimfox-options*
 
 
-                                                               *'vimfox_host'*
+                                                               *vimfox_host*
 Host address for the vimfox server: >
   let g:vimfox_host = '127.0.0.1'
 <
 
-                                                               *'vimfox_port'*
+                                                               *vimfox_port*
 Port the vimfox server binds to: >
   let g:vimfox_port = 9000
 <
 
-                                                  *'vimfox_echo_toggle_state'*
+                                                  *vimfox_echo_toggle_state*
                                                     
 Echo toggle state after using |'VimfoxToggle'|: >
   let g:vimfox_echo_toggle_state = 1
 <
   
-                                                              *'vimfox_debug'*
+                                                              *vimfox_debug*
 Show debug messages for vimfox server and websockets: >
   let g:vimfox_debug = 0
 <
 
-                                                        *'vimfox_hide_status'*
+                                                        *vimfox_hide_status*
 Hide the vimfox status indicator: >
   let g:vimfox_hide_status = 0
 <
