@@ -1,0 +1,156 @@
+*vimfox.txt*    For Vim version 7.3    Last change: Sat Jun 22 04:18:22 2013
+
+                  vimfox ~ Live web development for vim~
+
+
+
+==============================================================================
+CONTENTS                                                     *vimfox-contents*
+
+  1.Intro..................................|vimfox-intro|
+  2.Installation instructions..............|vimfox-installation-instructions|
+  3.How to use.............................|vimfox-how-to-use|
+  4.Commands...............................|vimfox-commands|
+  5.Options................................|vimfox-options|
+  6.About..................................|vimfox-about|
+
+
+==============================================================================
+1. Intro                                                        *vimfox-intro*
+
+Vimfox brings live css, javascript and html editing to vim. This means you
+can edit a file in vim and directly see the result without having to refresh 
+the page in the browser.
+
+Note: This is not my idea. A couple of days ago I was browsing on github and 
+found browser-connect (https://github.com/Bogdanp/browser-connect.vim), a 
+vim-plugin made by Bogdanp (http://github.com/Bogdanp) which offers live 
+reloading of css files. 
+
+I was curious about how the plugin worked and after reading up on websockets I 
+decided to write my own plugin.
+
+
+==============================================================================
+2. Installation instructions                *vimfox-installation-instructions*
+
+Install vimfox using pathogen / vundle or clone the repo directly into
+your $HOME/.vim directory.
+
+cd to the repo's root and:
+    
+    $: ./sh install.sh
+
+Note: This will download all the required modules using pip and install
+them locally in the vimfox-plugin directory. This ensures vimfox will
+work in virtualenvs.
+
+
+==============================================================================
+3. How to use                                              *vimfox-how-to-use*
+
+Add this script to the (html) page you want to work on
+
+'<script type="text/javascript" src="http://localhost:9000/vimfox/vimfox.js"></script>'
+
+
+
+==============================================================================
+3. Commands                                                  *vimfox-commands*
+
+
+:VimfoxToggle                                                 *'VimfoxToggle'*
+
+Start the vimfox server and make vimfox commands available to the buffer.
+
+
+:VimfoxReloadFile <force> <fname> <delay>                 *'VimfoxReloadFile'*
+
+Reload the buffer file without reloading the page in the browser.
+
+
+:VimfoxReloadPage <force> <delay>                         *'VimfoxReloadPage'*
+
+Reload the page in the browser.
+
+
+optional command arguments:                       *'vimfox-command-arguments'*
+
+<force> boolean => Force reload the file.
+<fname> string  => By default vimfox uses the buffer's filename. Use this
+                   if the file on the server has a different name.
+<delay> float   => The delay in seconds the vimfox.js wil wait before reloading the file.
+                   You can use this if you need to compile a large less / coffee
+                   file to css / js.
+
+
+==============================================================================
+4. Autocommands                                         *vimfox-autocommands*
+
+Vimfox does not include any autocommands. This keeps the vimfox code clean
+and the user in control.
+You can add your own autocommands to the |'g:vimfox_autocommands'| dictionary
+where the key is the filetype and the value a list of autocommands.
+Vimfox will automaticaly enable those autocommands for buffers where 
+vimfox is enabled.
+
+Examples >
+
+  " first create the dictionary
+  let g:vimfox_autocommands = {}
+
+  " call VimfoxReloadPage after every coffee file write.
+  let g:vimfox_autocommands['coffee'] = [
+    \ "autocmd BufWritePost <buffer> VimfoxReloadPage"
+    \]
+
+  " call VimfoxReloadFile every time you leave insert mode in a less file.
+  " The filename argument makes sure vimfox reloads 'foo.css' instead of 
+  " (the on the server not available) 'foo.less'. Vimfox will wait 1.5 
+  " seconds after receiving the reload command before reloading.
+  let fname = expand('%:r') . '.css'
+  let g:vimfox_autocmmands['less'] = [
+    \"autocmd InsertLeave <buffer> sil! w|VimfoxReloadFile fname, 1.5"
+    \]
+
+<
+
+==============================================================================
+5. Options                                                    *vimfox-options*
+
+
+                                                               *'vimfox_host'*
+Host address for the vimfox server: >
+  let g:vimfox_host = '127.0.0.1'
+<
+
+                                                               *'vimfox_port'*
+Port the vimfox server binds to: >
+  let g:vimfox_port = 9000
+<
+
+                                                  *'vimfox_echo_toggle_state'*
+                                                    
+Echo toggle state after using |'VimfoxToggle'|: >
+  let g:vimfox_echo_toggle_state = 1
+<
+  
+                                                              *'vimfox_debug'*
+Show debug messages for vimfox server and websockets: >
+  let g:vimfox_debug = 0
+<
+
+                                                        *'vimfox_hide_status'*
+Hide the vimfox status indicator: >
+  let g:vimfox_hide_status = 0
+<
+
+
+==============================================================================
+About                                                           *vimfox-about*
+
+  Creator: Daan Mathot
+  Website: https://www.github/dbsr/vimfox
+  Contact: dydrmntion _AT_ gmail
+
+          License: This file is placed in the public domain.~
