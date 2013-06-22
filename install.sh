@@ -24,7 +24,7 @@ fi
 
 $virtualenv $venv_dir && \
 source $venv_dir/bin/activate && \
-pip install -r .requirements.txt -t $ext_dir && \
+pip install -r requirements.txt -t $ext_dir && \
 if [[ `python -c "import argparse" &> /dev/null; echo $?`  != 0 ]]
 then
   pip install argparse -t $ext_dir
